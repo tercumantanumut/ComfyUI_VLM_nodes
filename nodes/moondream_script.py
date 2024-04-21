@@ -48,7 +48,7 @@ class MoonDream:
 
     CATEGORY = "VLM Nodes/MoonDream"
 
-   def process_image(self, image):
+    def process_image(self, image):
         # Calculate checksum of the image
         image_array = image.numpy()  # Convert Tensor to NumPy array
         image_hash = hashlib.sha256(image_array.tobytes()).hexdigest()
