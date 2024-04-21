@@ -1,4 +1,3 @@
-llama-cpp-agent==0.0.17
 mkdocs
 mkdocs-material
 mkdocstrings[python]
