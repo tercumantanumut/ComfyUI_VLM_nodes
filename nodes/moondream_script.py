@@ -1,5 +1,4 @@
 from .moondream import VisionEncoder, TextModel
-from huggingface_hub import snapshot_download
 import torch
 import os
 import hashlib
@@ -15,21 +14,16 @@ else:
     DTYPE = torch.float32
 
 
+# Initialize directories based on folder paths
 files_for_moondream = Path(folder_paths.folder_names_and_paths["LLavacheckpoints"][0][0]) / "files_for__moondream"
 files_for_moondream.mkdir(parents=True, exist_ok=True)
-output_directory = os.path.join(files_for_moondream , "output")
-# Define your local directory where you want to save the files
+output_directory = os.path.join(files_for_moondream, "output")
 
 image_encoder_cache_path = os.path.join(output_directory, "image_encoder_cache")
 class MoonDream:
     def __init__(self):
-        self.model_path = snapshot_download("vikhyatk/moondream1", 
-                                            revision="5b39a3ffad760c4e0ae67856dcd5edf1afcd63f4", 
-                                            local_dir=files_for_moondream,
-                                            force_download=False,  # Set to True if you always want to download, regardless of local copy
-                                            local_files_only=True,  # Set to False to allow downloading if not available locally
-                                            local_dir_use_symlinks=False  # or set to True/False based on your symlink preference
-                                        )
+        # Use the local directory directly for model path
+        self.model_path = str(files_for_moondream)
         self.vision_encoder = VisionEncoder(self.model_path)
         self.text_model = TextModel(self.model_path)
 
@@ -54,12 +48,12 @@ class MoonDream:
 
     CATEGORY = "VLM Nodes/MoonDream"
 
-    def process_image(self, image):
+   def process_image(self, image):
         # Calculate checksum of the image
-
         image_array = image.numpy()  # Convert Tensor to NumPy array
         image_hash = hashlib.sha256(image_array.tobytes()).hexdigest()
         image = transforms.ToPILImage()(image[0].permute(2, 0, 1))
+        
         # Check if `image_encoder_cache/{image_hash}.pt` exists, if so load and return it.
         # Otherwise, save the encoded image to `image_encoder_cache/{image_hash}.pt` and return it.
         cache_path = f"{image_encoder_cache_path}/{image_hash}.pt"
