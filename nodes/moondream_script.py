@@ -24,11 +24,11 @@ image_encoder_cache_path = os.path.join(output_directory, "image_encoder_cache")
 class MoonDream:
     def __init__(self):
         self.model_path = snapshot_download("vikhyatk/moondream1", 
-                                            revision="5cd8d1ecd7e0d8d95222543e1960d340ddffbfef", 
+                                            revision="5b39a3ffad760c4e0ae67856dcd5edf1afcd63f4", 
                                             local_dir=files_for_moondream,
                                             force_download=False,  # Set to True if you always want to download, regardless of local copy
-                                            local_files_only=False,  # Set to False to allow downloading if not available locally
-                                            local_dir_use_symlinks="auto"  # or set to True/False based on your symlink preference
+                                            local_files_only=True,  # Set to False to allow downloading if not available locally
+                                            local_dir_use_symlinks=False  # or set to True/False based on your symlink preference
                                         )
         self.vision_encoder = VisionEncoder(self.model_path)
         self.text_model = TextModel(self.model_path)
